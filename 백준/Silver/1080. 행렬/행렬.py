@@ -5,7 +5,7 @@ def solution(N, M, MATRIX):
 
         for i in range(3):
             for j in range(3):
-                MATRIX[x + i][y + j] = not MATRIX[x + i][y + j]
+                MATRIX[x + i][y + j] ^= 1
 
         return True
 
@@ -27,6 +27,6 @@ MATRIX = [list(map(int, list(input()))) for _ in range(N)]
 for i in range(N):
     goal = list(map(int, list(input())))
     for j in range(M):
-        MATRIX[i][j] = bool(MATRIX[i][j] ^ goal[j])
+        MATRIX[i][j] ^= goal[j]
 
 print(solution(N, M, MATRIX))

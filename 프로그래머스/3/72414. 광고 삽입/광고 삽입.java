@@ -1,13 +1,13 @@
 class Solution {
     public String solution(String play_time, String adv_time, String[] logs) {
-        return new Prob5_Sliding(play_time, adv_time, logs).solve();
+        return new Prob5_TwoPointer(play_time, adv_time, logs).solve();
     }
 }
 
-class Prob5_Sliding
+class Prob5_TwoPointer
 {
 	int playTime, adTime;
-	int[] timeLine;
+	long[] timeLine;
 
 	private int getIntTime(String strTime)
 	{
@@ -29,11 +29,11 @@ class Prob5_Sliding
 				String.format("%02d", second);
 	}
 
-	public Prob5_Sliding(String playTime, String adTime, String[] logs)
+	public Prob5_TwoPointer(String playTime, String adTime, String[] logs)
 	{
 		this.playTime = getIntTime(playTime);
 		this.adTime = getIntTime(adTime);
-		this.timeLine = new int[this.playTime + 1];
+		this.timeLine = new long[this.playTime + 1];
 
 		for (String log : logs)
 		{

@@ -65,23 +65,21 @@ int main(void)
                 cout << level + 1 << endl;
                 return 0;
             }
-            if (MAP[nx][ny] == '.' && !visited[nx][ny][keys])
+            else if (MAP[nx][ny] == '.' && !visited[nx][ny][keys])
             {
                 visited[nx][ny][keys] = true;
                 q.push(make_tuple(nx, ny, keys, level + 1));
             }
-            else if ('A' <= MAP[nx][ny] && MAP[nx][ny] <= 'Z')
+            else if ('A' <= MAP[nx][ny] && MAP[nx][ny] <= 'Z' && (keys & (1 << (MAP[nx][ny] - 'A'))) != 0 &&
+                     !visited[nx][ny][keys])
             {
-                if ((keys & (1 << (MAP[nx][ny] - 'A'))) != 0 && !visited[nx][ny][keys])
-                {
-                    visited[nx][ny][keys] = true;
-                    q.push(make_tuple(nx, ny, keys, level + 1));
-                }
+                visited[nx][ny][keys] = true;
+                q.push(make_tuple(nx, ny, keys, level + 1));
             }
             else if ('a' <= MAP[nx][ny] && MAP[nx][ny] <= 'z')
             {
                 int tmp_keys = keys | (1 << (MAP[nx][ny] - 'a'));
-                if (!visited[nx][ny][keys])
+                if (!visited[nx][ny][tmp_keys])
                 {
                     visited[nx][ny][tmp_keys] = true;
                     q.push(make_tuple(nx, ny, tmp_keys, level + 1));

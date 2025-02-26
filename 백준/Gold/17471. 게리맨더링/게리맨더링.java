@@ -82,13 +82,12 @@ public class Main {
             if (s1 < 0) continue;
 
             int anotherVisitBit = (~visitBit) & ((1 << N) - 1);
-            int anotherCity = Integer.lowestOneBit(visitBit);
-            anotherCity = (int) (Math.log(anotherCity) / Math.log(2));
+            int anotherCity = (int) (Math.log(visitBit & -visitBit) / Math.log(2));
 
             int s2 = calcScore(anotherCity, anotherVisitBit);
             if (s2 < 0) continue;
 
-            minScore = Math.min(minScore, Math.abs(s1- s2));
+            minScore = Math.min(minScore, Math.abs(s1 - s2));
         }
 
         if (minScore == POPULATION_SUM) minScore = -1;

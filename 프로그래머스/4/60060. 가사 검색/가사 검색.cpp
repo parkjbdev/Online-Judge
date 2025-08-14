@@ -21,9 +21,6 @@ struct Trie {
         }
     }
     
-    // Trie(const Trie&) = delete;
-    // Trie& operator=(const Trie&) = delete;
-
     void insert(const string& c) {
         struct Trie* iter = this;
         iter->cnt++;
@@ -49,30 +46,23 @@ struct Trie {
         }
         
         return iter->cnt;
-        
-        // while (iter != nullptr) {
-        //     iter = iter->next[s[idx] - 'a'];
-        //     if (iter != nullptr && s[++idx] == '?') return iter->cnt;
-        // }
-
-        // return 0;
     }
 };
 
 vector<int> solution(vector<string> words, vector<string> queries) {
     vector<int> answer;
     unordered_map<string, int> result_cache;
-    unordered_map<int, struct Trie> fwd, bwd;
+    unordered_map<int, unique_ptr<struct Trie>> fwd, bwd;
 
     for (auto word: words) {
         string rev = word;
         reverse(rev.begin(), rev.end());
         
-        // if (!fwd[word.size()]) fwd[word.size()] = make_unique<Trie>();
-        // if (!bwd[word.size()]) bwd[word.size()] = make_unique<Trie>();
+        if (!fwd[word.size()]) fwd[word.size()] = make_unique<Trie>();
+        if (!bwd[word.size()]) bwd[word.size()] = make_unique<Trie>();
 
-        fwd[word.size()].insert(word);
-        bwd[word.size()].insert(rev);
+        fwd[word.size()]->insert(word);
+        bwd[word.size()]->insert(rev);
     }
 
     for (auto query: queries) {
@@ -81,20 +71,19 @@ vector<int> solution(vector<string> words, vector<string> queries) {
         auto find = result_cache.find(query);
         
         if (find != result_cache.end()) {
-            answer.push_back((*find).second);
+            answer.push_back(find->second);
             continue;
         }
         
         if (query[0] == '?') {
             string rev = query;
             reverse(rev.begin(), rev.end());
+            
         	if (bwd.find(query.size()) != bwd.end())
-        	// if (bwd.count(query.size()))
-            	cnt = bwd[query.size()].count(rev);
+            	cnt = bwd[query.size()]->count(rev);
         } else {
         	if (fwd.find(query.size()) != fwd.end())
-        	// if (fwd.count(query.size()))
-            	cnt = fwd[query.size()].count(query);
+            	cnt = fwd[query.size()]->count(query);
         }
         
         result_cache[query] = cnt;

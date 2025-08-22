@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+#define MAX_DIST 100000000
+
+using namespace std;
+
+int main(void) {
+    int n;
+    cin >> n;
+
+    int m;
+    cin >> m;
+
+    vector<vector<int>> graph(n, vector<int>(n, MAX_DIST));
+
+    for (int i = 0; i < n; i++) {
+        graph[i][i] = 0;
+    }
+
+    for (int i = 0; i < m; i++) {
+        int s, e, w;
+        cin >> s >> e >> w;
+
+        if (graph[s - 1][e - 1] > w)
+            graph[s - 1][e - 1] = w;
+    }
+
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i][k] != MAX_DIST && graph[k][j] != MAX_DIST)
+                    if (graph[i][j] > graph[i][k] + graph[k][j])
+                        graph[i][j] = graph[i][k] + graph[k][j];
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << (graph[i][j] == MAX_DIST ? 0 : graph[i][j]) << ' ';
+        }
+        cout << endl;
+    }
+}

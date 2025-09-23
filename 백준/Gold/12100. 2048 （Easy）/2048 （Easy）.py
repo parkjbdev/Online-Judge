@@ -52,14 +52,20 @@ def move_i(i, MAP):
     elif i == 3:
         return move(0, 1, MAP)
 
+    return MAP
+
 answer = 0
-for i in range(4):
-    for j in range(4):
-        for k in range(4):
-            for l in range(4):
-                for m in range(4):
-                    RES = move_i(m, move_i(l, move_i(k, move_i(j, move_i(i, MAP)))))
-                    for n in range(N):
-                        answer = max(answer, max(RES[n]))
+
+def dfs(board, depth=0):
+    global answer
+    if depth == 5:
+        answer = max(answer, max(max(r) for r in board))
+        return
+
+    for direction in range(4):
+        NMAP = move_i(direction, board)
+        dfs(NMAP, depth + 1)
+
+dfs(MAP)
 
 print(answer)

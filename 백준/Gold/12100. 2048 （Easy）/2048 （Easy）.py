@@ -64,8 +64,10 @@ def dfs(board, depth=0):
 
     for direction in range(4):
         NMAP = move_i(direction, board)
+        if NMAP == board:
+            answer = max(answer, max(max(r) for r in board))
+            continue
         dfs(NMAP, depth + 1)
 
 dfs(MAP)
-
 print(answer)

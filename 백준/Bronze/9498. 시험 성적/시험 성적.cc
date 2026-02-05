@@ -6,10 +6,7 @@ int main() {
 
     int score;
     cin >> score;
-
-    if (score == 100) cout << "A";
-    else if (score < 60) cout << "F";
-    else cout << static_cast<char>(9 - (score / 10) + 'A');
+    cout << "FFFFFFDCBAA"[score/10];
 
     return 0;
 }

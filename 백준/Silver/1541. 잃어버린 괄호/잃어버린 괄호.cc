@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <cmath>
 
 using namespace std;
 
@@ -20,12 +19,10 @@ int main() {
         while (i + parse_len < input.length() && (
                    input[i + parse_len] != '+' &&
                    input[i + parse_len] != '-')
-        )
+        ) {
+            parse_int *= 10;
+            parse_int += (input[i + parse_len] - '0');
             parse_len++;
-
-        for (int j = i; j < i + parse_len; j++) {
-            parse_int += ((input[j] - '0') * static_cast<int>(pow(
-                              10, i + parse_len - j - 1)));
         }
 
         result += mult * parse_int;

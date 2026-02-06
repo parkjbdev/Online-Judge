@@ -3,25 +3,47 @@
 using namespace std;
 #define N 9
 
-bool solve_sudoku(int sudoku[N][N], vector<pair<int, int> > &blanks, int blank_idx) {
+int sudoku[N][N] = {0,};
+int col_mask[9] = {0,};
+int row_mask[9] = {0,};
+int sqr_mask[9] = {0,};
+
+int sqr_idx(int x, int y) {
+    return (int) (x / 3) * 3 + (int) (y / 3);
+}
+
+void fill_sudoku(int x, int y, int num) {
+    sudoku[x][y] = num;
+    row_mask[x] |= 0b1 << num;
+    col_mask[y] |= 0b1 << num;
+    sqr_mask[(int) (x / 3) * 3 + (int) (y / 3)] |= 0b1 << num;
+}
+
+void clear_sudoku(int x, int y) {
+    row_mask[x] &= ~(0b1 << sudoku[x][y]);
+    col_mask[y] &= ~(0b1 << sudoku[x][y]);
+    sqr_mask[sqr_idx(x, y)] &= ~(0b1 << sudoku[x][y]);
+    sudoku[x][y] = 0;
+}
+
+bool exists(int mask, int num) {
+    return (mask & (0b1 << num)) == (0b1 << num);
+}
+
+bool solve_sudoku(vector<pair<int, int> > &blanks,
+                  int blank_idx) {
     if (blank_idx == blanks.size()) return true;
     for (int i = 1; i <= 9; ++i) {
-        auto blank = blanks[blank_idx];
-        bool flag = true;
-        for (int j = 0; j < N; ++j) {
-            int x = ((int) (blank.first / 3)) * 3 + j / 3;
-            int y = ((int) (blank.second / 3)) * 3 + j % 3;
-            if (sudoku[blank.first][j] == i || sudoku[j][blank.second] == i ||
-                sudoku[x][y] == i) {
-                flag = false;
-                break;
-            }
-        }
-        if (!flag) continue;
+        int x = blanks[blank_idx].first;
+        int y = blanks[blank_idx].second;
+        if (exists(row_mask[x], i) ||
+            exists(col_mask[y], i) ||
+            exists(sqr_mask[sqr_idx(x, y)], i))
+            continue;
 
-        sudoku[blank.first][blank.second] = i;
-        if (solve_sudoku(sudoku, blanks, blank_idx + 1)) return true;
-        sudoku[blank.first][blank.second] = 0;
+        fill_sudoku(x, y, i);
+        if (solve_sudoku(blanks, blank_idx + 1)) return true;
+        clear_sudoku(x, y);
     }
     return false;
 }
@@ -29,17 +51,17 @@ bool solve_sudoku(int sudoku[N][N], vector<pair<int, int> > &blanks, int blank_i
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int sudoku[N][N] = {0,};
     vector<pair<int, int> > blanks;
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             cin >> sudoku[i][j];
             if (sudoku[i][j] == 0) blanks.emplace_back(i, j);
+            else fill_sudoku(i, j, sudoku[i][j]);
         }
     }
 
-    solve_sudoku(sudoku, blanks, 0);
+    solve_sudoku(blanks, 0);
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             cout << sudoku[i][j] << " ";

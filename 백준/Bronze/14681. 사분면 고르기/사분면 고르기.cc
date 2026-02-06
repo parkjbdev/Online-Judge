@@ -1,2 +1,2 @@
 #include<cstdio>
-int x,y;main(){scanf("%d%d",&x,&y);printf("%d",1+2*(y<0)+((x^y)<0));}
+main(){int x, y;scanf("%d%d",&x,&y);putchar("3241"[(x>0)<<1|y>0]);}
